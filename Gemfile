@@ -26,8 +26,10 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
 gem 'spring',        group: :development
 
-# Bower
+# Other gems
 gem 'bower-rails', '~> 0.9.2'
+gem 'angular-rails-templates', '~> 0.1.3'
+
 
 # Additional gem for development and test
 group :development, :test do
