@@ -38,6 +38,8 @@ group :development, :test do
   gem 'capybara', '~> 2.4.4'
   gem 'database_cleaner', '~> 1.4.0'
   gem 'selenium-webdriver', '~> 2.45.0'
+  gem 'teaspoon', '~> 0.9.1'
+  gem 'phantomjs', '~> 1.9.8.0'
 end
 
 # Use ActiveModel has_secure_password
