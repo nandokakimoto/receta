@@ -9,8 +9,12 @@ receta.config([ '$routeProvider',
   ($routeProvider) ->
     $routeProvider
       .when('/',
-        templateUrl: "index.html",
+        templateUrl: 'index.html',
         controller: 'RecipesController'
+      )
+      .when('/recipes/:recipeId',
+        templateUrl: 'show.html',
+        controller: 'RecipeController'
       )
 ])
 
