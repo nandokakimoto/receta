@@ -74,4 +74,30 @@ RSpec.describe RecipesController, type: :controller do
 
   end
 
+  describe "create" do
+    before do
+      xhr :post, :create, format: :json, recipe: { name: "Toast", instructions: "Add bread to toaster, push lever" }
+    end
+
+    subject(:result) { JSON.parse(response.body) }
+
+    it { expect(response.status).to eq(201) }
+    it { expect(result["name"]).to eq("Toast") }
+    it { expect(result["instructions"]).to eq("Add bread to toaster, push lever") }
+
+  end
+
+  describe "update" do
+    let(:recipe) { Recipe.create! name: "Toast", instructions: "Add bread to toaster, push lever" }
+
+    before do
+      xhr :put, :update, format: :json, id: recipe.id, recipe: { name: "Baked Potato", instructions: "Nuke for 20 minutes" }
+      recipe.reload
+    end
+
+    it { expect(response.status).to eq(204) }
+    it { expect(recipe.name).to eq("Baked Potato") }
+    it { expect(recipe.instructions).to eq("Nuke for 20 minutes") }
+  end
+
 end

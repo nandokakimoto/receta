@@ -29,7 +29,7 @@ gem 'spring',        group: :development
 # Other gems
 gem 'bower-rails', '~> 0.9.2'
 gem 'angular-rails-templates', '~> 0.1.3'
-
+gem 'responders', '~> 2.1.0'
 
 # Additional gem for development and test
 group :development, :test do

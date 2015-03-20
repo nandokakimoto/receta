@@ -6,31 +6,33 @@ describe "RecipeController", ->
   resource    = null
   httpBackend = null
   ctrl        = null
+  location    = null
 
   fakeRecipe =
     id: 109
     name: "Baked Potatoes"
     instructions: "Pierce potato with fork, nuke for 20 minutes"
 
-  setupController = () ->
-    inject(($routeParams, $rootScope, $resource, $httpBackend, $window, $controller)->
+  setupController = (recipeId) ->
+    inject(($routeParams, $rootScope, $resource, $httpBackend, $location, $window, $controller)->
 
       scope       = $rootScope.$new()
       resource    = $resource
       httpBackend = $httpBackend
+      location    = $location
       routeParams = $routeParams
-      routeParams.recipeId = fakeRecipe.id
+      routeParams.recipeId = recipeId
 
-      ctrl = $controller('RecipeController', $scope: scope, $window: window)
+      ctrl = $controller('RecipeController', $scope: scope, $location: location, $window: window)
     )
-
-  beforeEach(setupController())
 
   afterEach ->
     httpBackend.verifyNoOutstandingExpectation()
     httpBackend.verifyNoOutstandingRequest()
 
   describe 'controller initialization', ->
+
+    beforeEach(setupController(fakeRecipe.id))
 
     describe 'recipe is found', ->
 
@@ -45,4 +47,16 @@ describe "RecipeController", ->
         httpBackend.expectGET("/recipes/#{fakeRecipe.id}?format=json").respond(404)
         httpBackend.flush()
         expect(scope.recipe).toBe(null)
+
+  describe 'create recipe', ->
+
+    beforeEach(setupController())
+
+    it 'should POST new recipe to backend', ->
+      httpBackend.expectPOST("/recipes?format=json").respond(201, fakeRecipe)
+      scope.recipe.name = fakeRecipe.name
+      scope.recipe.instructions = fakeRecipe.instructions
+      scope.save()
+      httpBackend.flush()
+      expect(location.path()).toBe("/recipes/#{fakeRecipe.id}")
 

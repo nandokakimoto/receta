@@ -57,8 +57,7 @@ describe "RecipesController", ->
         expect(scope.recipes).toEqualData(recipes)
 
   describe 'search()', ->
-    beforeEach ->
-      setupController()
+    beforeEach(setupController())
 
     it 'redirects to itself with a keyword param', ->
       keywords = 'foo'
@@ -66,3 +65,9 @@ describe "RecipesController", ->
       expect(location.path()).toBe('/')
       expect(location.search()).toEqualData({keywords: keywords})
 
+  describe 'newRecipe()', ->
+    beforeEach(setupController())
+
+    it 'redirects to new recipe URL', ->
+      scope.newRecipe()
+      expect(location.path()).toBe('/recipes/new')
