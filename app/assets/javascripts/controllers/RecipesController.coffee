@@ -1,13 +1,28 @@
 controllers = angular.module( 'controllers' )
 controllers.controller( 'RecipesController', [ '$scope', '$routeParams', '$location', '$resource',
   ($scope, $routeParams, $location, $resource)->
-    $scope.search = (keywords)-> $location.path("/").search("keywords", keywords)
-    $scope.newRecipe = () -> $location.path("/recipes/new")
+    Recipe = $resource('/recipes/:recipeId', { recipeId: "@id", format: 'json' },
+      {
+        delete: { method: 'DELETE' }
+      }
+    )
 
-    Recipe = $resource('/recipes', { format: 'json' })
+    $scope.loadRecipes = () ->
+      if $routeParams.keywords
+        Recipe.query(keywords: $routeParams.keywords, (results)-> $scope.recipes = results)
+      else
+        $scope.recipes = []
 
-    if $routeParams.keywords
-      Recipe.query(keywords: $routeParams.keywords, (results)-> $scope.recipes = results)
-    else
-      $scope.recipes = []
+    $scope.search = (keywords) ->
+      $location.path("/").search("keywords", keywords)
+
+    $scope.newRecipe = () ->
+      $location.path("/recipes/new")
+
+    $scope.deleteRecipe = (recipeId) ->
+      recipe = { id: recipeId }
+      Recipe.delete( {}, recipe, ( () -> $scope.loadRecipes()) )
+
+
+    $scope.loadRecipes()
 ])

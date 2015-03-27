@@ -8,6 +8,13 @@ describe "RecipesController", ->
   resource    = null
   httpBackend = null
 
+  keywords = 'foo'
+  recipes  = [
+    { id: 2, name: 'Baked Potatoes' },
+    { id: 4, name: 'Potatoes Au Gratin' }
+  ]
+
+
   setupController = (keywords, results)->
     inject(($location, $routeParams, $rootScope, $resource, $httpBackend, $controller)->
       scope       = $rootScope.$new()
@@ -37,18 +44,6 @@ describe "RecipesController", ->
         expect(scope.recipes).toEqualData([])
 
     describe 'with keywords', ->
-      keywords = 'foo'
-      recipes  = [
-        {
-          id: 2
-          name: 'Baked Potatoes'
-        },
-        {
-          id: 4
-          name: 'Potatoes Au Gratin'
-        }
-      ]
-
       beforeEach ->
         setupController(keywords, recipes)
         httpBackend.flush()
@@ -71,3 +66,23 @@ describe "RecipesController", ->
     it 'redirects to new recipe URL', ->
       scope.newRecipe()
       expect(location.path()).toBe('/recipes/new')
+
+  describe 'deleteRecipe()', ->
+    recipeId = 2
+
+    beforeEach ->
+      setupController(keywords, recipes)
+      httpBackend.flush()
+      httpBackend.expectDELETE("/recipes/#{recipeId}?format=json").respond(204, null)
+      httpBackend.expectGET("/recipes?format=json&keywords=foo").respond(200, [recipes[1]])
+
+    it 'send DELETE to backend', ->
+      scope.deleteRecipe(recipeId)
+      httpBackend.flush()
+
+    it 'reload recipes without deleted recipe', ->
+      scope.deleteRecipe(recipeId)
+      httpBackend.flush()
+      expect(scope.recipes).toEqualData([recipes[1]])
+
+

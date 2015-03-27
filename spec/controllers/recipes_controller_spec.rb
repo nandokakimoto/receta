@@ -100,4 +100,15 @@ RSpec.describe RecipesController, type: :controller do
     it { expect(recipe.instructions).to eq("Nuke for 20 minutes") }
   end
 
+  describe "delete" do
+    let(:recipe) { Recipe.create! name: "Toast", instructions: "Add bread to toaster, push lever" }
+
+    before do
+      xhr :delete, :destroy, format: :json, id: recipe.id
+    end
+
+    it { expect(response.status).to eq(204) }
+    it { expect(Recipe.find_by(id: recipe.id)).to be_nil }
+  end
+
 end

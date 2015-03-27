@@ -24,6 +24,12 @@ class RecipesController < ApplicationController
     respond_with(@recipe)
   end
 
+  def destroy
+    @recipe = Recipe.find(params[:id])
+    @recipe.destroy
+    respond_with(@recipe)
+  end
+
   private
 
   def recipe_params

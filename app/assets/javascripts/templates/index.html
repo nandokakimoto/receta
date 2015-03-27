@@ -22,7 +22,7 @@
         <h1 class="h3 col-md-6 text-right" style="margin-top: 0"><a href="#/recipes/{{recipe.id}}">{{recipe.name}}</a></h1>
         <div class="col-md-6">
           <button class="btn btn-info">Edit</button>
-          <button class="btn btn-danger">Delete</button>
+          <button class="btn btn-danger" ng-click="deleteRecipe(recipe.id)">Delete</button>
         </div>
       </section>
     </li>

@@ -39,4 +39,14 @@ feature "Displaying a recipe", js: true do
     expect(page).to have_content "Put it in the oven for 15 minutes"
   end
 
+  scenario "delete recipe" do
+    visit "/"
+    fill_in "keywords", with: "Baked Brussel Sprouts"
+
+    click_on "Search"
+    click_on "Delete"
+
+    expect(page).not_to have_content "Baked Brussel Sprouts"
+  end
+
 end
