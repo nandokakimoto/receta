@@ -23,6 +23,9 @@ controllers.controller( 'RecipesController', [ '$scope', '$routeParams', '$locat
       recipe = { id: recipeId }
       Recipe.delete( {}, recipe, ( () -> $scope.loadRecipes()) )
 
+    $scope.editRecipe = (recipeId) ->
+      $location.path("/recipes/#{recipeId}/edit")
+
 
     $scope.loadRecipes()
 ])

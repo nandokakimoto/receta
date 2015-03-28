@@ -4,13 +4,14 @@ controllers.controller('RecipeController', ['$scope', '$routeParams', '$resource
     Recipe = $resource('/recipes/:recipeId', { recipeId: "@id", format: 'json' },
       {
         create: { method: 'POST' }
+        update: { method: 'PUT' }
       }
     )
 
     if $routeParams.recipeId
       Recipe.get({ recipeId: $routeParams.recipeId },
         ( (recipe)-> $scope.recipe = recipe ),
-        ( (error)-> $scope.recipe = null )
+        ( (error)-> $scope.recipe = {} )
       )
     else
       $scope.recipe = {}
@@ -19,7 +20,13 @@ controllers.controller('RecipeController', ['$scope', '$routeParams', '$resource
       $window.history.back()
 
     $scope.save = () ->
-      Recipe.create($scope.recipe,
-        ( (newRecipe) -> $location.path("/recipes/#{newRecipe.id}") )
-      )
+      if $routeParams.recipeId
+        Recipe.update($scope.recipe,
+          ( (recipe) -> $location.path("/recipes/#{recipe.id}") )
+        )
+      else
+        Recipe.create($scope.recipe,
+          ( (recipe) -> $location.path("/recipes/#{recipe.id}") )
+        )
+
 ])

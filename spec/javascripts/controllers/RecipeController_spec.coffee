@@ -32,21 +32,25 @@ describe "RecipeController", ->
 
   describe 'controller initialization', ->
 
-    beforeEach(setupController(fakeRecipe.id))
+    describe 'form create', ->
 
-    describe 'recipe is found', ->
+      it 'should have empty recipe', ->
+        setupController()
+        expect(scope.recipe).toEqualData({})
 
-      it 'should loads recipe', ->
+    describe 'for update', ->
+
+      beforeEach(setupController(fakeRecipe.id))
+
+      it 'should loads recipe if found', ->
         httpBackend.expectGET("/recipes/#{fakeRecipe.id}?format=json").respond(204, fakeRecipe)
         httpBackend.flush()
         expect(scope.recipe).toEqualData(fakeRecipe)
 
-    describe 'recipe is not found', ->
-
-      it 'should lods null recipe', ->
+      it 'should lods null recipe if not found', ->
         httpBackend.expectGET("/recipes/#{fakeRecipe.id}?format=json").respond(404)
         httpBackend.flush()
-        expect(scope.recipe).toBe(null)
+        expect(scope.recipe).toEqualData({})
 
   describe 'create recipe', ->
 
@@ -59,4 +63,21 @@ describe "RecipeController", ->
       scope.save()
       httpBackend.flush()
       expect(location.path()).toBe("/recipes/#{fakeRecipe.id}")
+
+  describe 'update recipe', ->
+
+    updatedRecipe = { id: 109, name: 'New name', instructions: 'New instructions' }
+
+    beforeEach ->
+      setupController(fakeRecipe.id)
+      httpBackend.expectGET("/recipes/#{fakeRecipe.id}?format=json").respond(204, fakeRecipe)
+      httpBackend.flush()
+
+    it 'should send PUT to backend', ->
+      scope.recipe.name = updatedRecipe.name
+      scope.recipe.instructions = updatedRecipe.instructions
+      httpBackend.expectPUT("/recipes/#{fakeRecipe.id}?format=json", updatedRecipe).respond(201, updatedRecipe)
+      scope.save()
+      httpBackend.flush()
+      expect(location.path()).toBe("/recipes/#{updatedRecipe.id}")
 

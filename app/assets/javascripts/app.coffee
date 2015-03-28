@@ -20,6 +20,10 @@ receta.config([ '$routeProvider',
         templateUrl: 'show.html',
         controller: 'RecipeController'
       )
+      .when('/recipes/:recipeId/edit',
+        templateUrl: 'form.html',
+        controller: 'RecipeController'
+      )
 ])
 
 controllers = angular.module( 'controllers', [] )

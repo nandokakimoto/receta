@@ -86,3 +86,14 @@ describe "RecipesController", ->
       expect(scope.recipes).toEqualData([recipes[1]])
 
 
+  describe 'editRecipe()', ->
+    recipeId = 2
+
+    beforeEach ->
+      setupController(keywords, recipes)
+      httpBackend.flush()
+
+    it 'should redirect to edit path', ->
+      scope.editRecipe(recipeId)
+      expect(location.path()).toBe('/recipes/2/edit')
+
